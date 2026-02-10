@@ -126,12 +126,14 @@ if __name__ == "__main__":
     parser.add_argument("--img_a", required=True, type=str)
     parser.add_argument("--img_b", required=True, type=str)
     parser.add_argument("--img_a_prime", required=True, type=str)
+    parser.add_argument("--img_b_prime", required=True, type=str)
     parser.add_argument("--save_dir", default="./log/result", type=str)
     args = parser.parse_args()
 
     img = np.array(Image.open(args.img_a))
     ref = np.array(Image.open(args.img_b))
     img_prime = np.array(Image.open(args.img_a_prime))
+    ref_prime_gt = np.array(Image.open(args.img_b_prime))
     ref_prime = np.zeros_like(img_prime)
 
     p_size = 3
@@ -150,3 +152,4 @@ if __name__ == "__main__":
     Image.fromarray(ref).save(os.path.join(args.save_dir, "img_b.png"))
     Image.fromarray(img_prime).save(os.path.join(args.save_dir, "img_a_prime.png"))
     Image.fromarray(ref_prime).save(os.path.join(args.save_dir, "img_b_prime.png"))
+    Image.fromarray(ref_prime_gt).save(os.path.join(args.save_dir, "img_b_prime_gt.png"))
