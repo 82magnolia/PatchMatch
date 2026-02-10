@@ -27,3 +27,9 @@ There are two patchmatch code: PatchMatch.py and PatchMatch_Bidirectional.py. Th
 |Iteration 1|Iteration 2|Iteration 5|
 |-|-|-|
 |![](https://github.com/MingtaoGuo/Patch_Match_python/blob/master/IMAGE/1_itr.gif)|![](https://github.com/MingtaoGuo/Patch_Match_python/blob/master/IMAGE/2_itr.gif)|![](https://github.com/MingtaoGuo/Patch_Match_python/blob/master/IMAGE/5_itr.gif)|
+
+# Example usage
+Run the following command to get image edits
+```
+python PatchMatch.py --img_a data/ObjectFolder_touch/36/4_scale_50_color.jpg --img_b data/ObjectFolder_touch/36/7_scale_50_color.jpg --img_a_prime data/ObjectFolder_touch/36/4_scale_50_shadow.jpg --img_b_prime data/ObjectFolder_touch/36/7_scale_50_shadow.jpg
+```
