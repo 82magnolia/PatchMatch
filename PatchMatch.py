@@ -1,6 +1,9 @@
 import numpy as np
 from PIL import Image
 import time
+import argparse
+import os
+
 
 def cal_distance(a, b, A_padding, B, p_size):
     p = p_size // 2
@@ -18,7 +21,8 @@ def reconstruction(f, A, B):
     for i in range(A_h):
         for j in range(A_w):
             temp[i, j, :] = B[f[i, j][0], f[i, j][1], :]
-    Image.fromarray(temp).show()
+    A = temp
+    return A
 
 
 def initialization(A, B, p_size):
@@ -116,13 +120,33 @@ def NNS(img, ref, p_size, itr):
         print("iteration: %d"%(itr))
     return f
 
+
 if __name__ == "__main__":
-    img = np.array(Image.open("./cup_a.jpg"))
-    ref = np.array(Image.open("./cup_b.jpg"))
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--img_a", required=True, type=str)
+    parser.add_argument("--img_b", required=True, type=str)
+    parser.add_argument("--img_a_prime", required=True, type=str)
+    parser.add_argument("--save_dir", default="./log/result", type=str)
+    args = parser.parse_args()
+
+    img = np.array(Image.open(args.img_a))
+    ref = np.array(Image.open(args.img_b))
+    img_prime = np.array(Image.open(args.img_a_prime))
+    ref_prime = np.zeros_like(img_prime)
+
     p_size = 3
     itr = 5
     start = time.time()
-    f = NNS(img, ref, p_size, itr)
+    f = NNS(ref, img, p_size, itr)  # f is a mapping from ref -> img: nearest pixel in img for each pixel in ref
     end = time.time()
     print(end - start)
-    reconstruction(f, img, ref)
+    ref_prime = reconstruction(f, ref_prime, img_prime)  # Uses f and reads off from img_prime to create ref_prime
+    Image.fromarray(ref_prime).show()
+
+    if not os.path.exists(args.save_dir):
+        os.makedirs(args.save_dir, exist_ok=True)
+
+    Image.fromarray(img).save(os.path.join(args.save_dir, "img_a.png"))
+    Image.fromarray(ref).save(os.path.join(args.save_dir, "img_b.png"))
+    Image.fromarray(img_prime).save(os.path.join(args.save_dir, "img_a_prime.png"))
+    Image.fromarray(ref_prime).save(os.path.join(args.save_dir, "img_b_prime.png"))
